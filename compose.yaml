@@ -1,0 +1,24 @@
+services:
+  provider:
+    build: .
+    networks:
+      network:
+        ipv4_address: 192.168.123.51
+    #command: /bin/bash
+    #stdin_open: true # docker run -i
+    #tty: true        # docker run -t
+    volumes:
+      - ./code:/app/code
+
+networks:
+  network:
+    driver: ipvlan
+    driver_opts:
+      parent: enx9c69d36bd568 # "Mathis" LAN adapter
+      ipvlan-mode: l2
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.123.0/24
+          gateway: 192.168.123.1
+          ip_range: 192.168.123.0/24
