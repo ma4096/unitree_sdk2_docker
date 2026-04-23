@@ -15,17 +15,24 @@ RUN git clone --branch 0.10.2 https://github.com/eclipse-cyclonedds/cyclonedds.g
 	&& make -j$(nproc) \
 	&& make install
 
-RUN pip install numpy opencv-python
-
 # Set environment variable so CMake can locate the installed CycloneDDS
 ENV CMAKE_PREFIX_PATH=/usr/local
 #:$CMAKE_PREFIX_PATH
 
 # install https://github.com/unitreerobotics/unitree_sdk2_python
+
+# python dependencies
+RUN pip3 install numpy opencv-python
 WORKDIR /app
 COPY unitree_sdk2_python/ ./unitree_sdk2_python/
 #RUN git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
-WORKDIR /app/unitree_sdk2_python
-RUN pip3 install -e .
+#WORKDIR /app/unitree_sdk2_python
+RUN pip3 install -e ./unitree_sdk2_python/
+
+# install unitree_mujoco for a simulation environment
+#RUN pip3 install mujoco pygame
+#WORKDIR /app
+#COPY unitree_mujoco/ ./unitree_mujoco
+#RUN pip3 install -e ./unitree_mujoco/
 
 CMD [ "/bin/bash" ]

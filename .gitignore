@@ -1,2 +1,4 @@
 .venv/
 unitree_sdk2_python/
+unitree_mujoco/
+code/*

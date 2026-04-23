@@ -1,0 +1,9 @@
+echo "Building the SDK..."
+git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
+chmod +x start_docker
+docker compose build provider
+
+echo "Building the MuJoCo container..."
+git clone https://github.com/unitreerobotics/unitree_mujoco.git
+chmod +x start_mujoco
+docker compose build mujoco

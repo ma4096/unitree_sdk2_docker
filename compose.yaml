@@ -1,14 +1,55 @@
 services:
   provider:
-    build: .
+    build:
+      context: .
+      dockerfile: dockerfiles/sdk2_python.dockerfile
     networks:
       network:
         ipv4_address: 192.168.123.51
-    #command: /bin/bash
-    #stdin_open: true # docker run -i
-    #tty: true        # docker run -t
+      internal:
+        ipv4_address: 192.168.244.3
+
     volumes:
-      - ./code:/app/code
+      - ./:/app/
+    command:
+      - "/bin/bash"
+
+    container_name: go2_provider
+    image: laika/unitree_sdk2_python:latest
+
+  mujoco:
+    build:
+      context: .
+      dockerfile: dockerfiles/mujoco.dockerfile
+    networks:
+      internal:
+        ipv4_address: 192.168.244.4
+    volumes:
+      - /tmp/.X11-unix/:/tmp/.X11-unix # needed to open windows on the screen
+      - ./unitree_mujoco/:/app/unitree_mujoco
+    environment:
+      - "DISPLAY=${DISPLAY}"
+
+    container_name: mujoco
+    image: laika/mujoco:latest
+
+    command: [ "python3", "unitree_mujoco.py" ]
+    #command: ["/bin/bash"]
+
+  deepseek-ocr:
+    profiles:
+      - donotstart
+    volumes:
+      - ~/Code/ollama/ollama_internal:/root/.ollama
+    ports:
+      - 11434:11434
+    container_name: ollama
+    image: ollama/ollama
+    networks:
+      internal:
+        ipv4_address: 192.168.244.2
+    post_start:
+      - command: ["ollama", "run", "deepseek-ocr"]
 
 networks:
   network:
@@ -22,3 +63,15 @@ networks:
         - subnet: 192.168.123.0/24
           gateway: 192.168.123.1
           ip_range: 192.168.123.0/24
+
+  internal:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.244.0/24
+          gateway: 192.168.244.1
+          ip_range: 192.168.244.0/24
+
+# could host mujoco on different container? Multicast auto enabled on internal network hmmm
+# could make `cap_add: ...` obsolet, good for security

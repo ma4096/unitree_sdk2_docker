@@ -1,0 +1,2 @@
+xhost +local:root
+docker compose run --rm --name go2_mujoco mujoco
