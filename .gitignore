@@ -2,5 +2,6 @@
 unitree_sdk2_python/
 unitree_mujoco*
 unitree_rl_mjlab/
-MuJoCo-LiDAR/
+LOCAL-MuJoCo-LiDAR/
+isem_go2_interface/
 code/*

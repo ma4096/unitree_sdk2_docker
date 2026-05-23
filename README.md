@@ -21,6 +21,7 @@ All of this is tested on Ubuntu 22.04 LTS and should work on any other reasonabl
     - Test connection with the sdk examples
 
 - Coding can be done live inside the mounted `code` directory :)
+- We already include the [isem_go2_interface](https://github.com/ma4096/isem_go2_interface) in this service. See that repo for usage :)
 
 ## MuJoCo
 Similar to the main SDK container:
@@ -33,6 +34,9 @@ Similar to the main SDK container:
 See the original repo for more documentation/details.
 
 When data from the SDK service doesn't seem to reach the simulation, check in both scripts, that the correct domain id and interface are selected. In MuJoCo, this is done in e.g. `simulate_python/config.py`, in the python SDK using the arguments of `ChannelFactoryInitialize(id, interface)`.
+
+### mjlab service
+Can be enabled (see commented part in `install` and service in `compose.yaml`), but is not used in our course.
 
 ### Ollama service
 This is a relict from me trying to build a VLA :)

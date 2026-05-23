@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 WORKDIR /opt
 
 # dependencies of opencv
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 -y
 # main dependencies of the unitree sdk2 python
 RUN apt-get install -y git cmake python3.11 python3-pip iproute2
 
@@ -22,12 +22,16 @@ ENV CMAKE_PREFIX_PATH=/usr/local
 # install https://github.com/unitreerobotics/unitree_sdk2_python
 
 # python dependencies
-RUN pip3 install numpy opencv-python
+RUN pip3 install --upgrade pip
+RUN pip3 install numpy opencv-python uv onnxruntime
 WORKDIR /app
 COPY unitree_sdk2_python/ ./unitree_sdk2_python/
 #RUN git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
 #WORKDIR /app/unitree_sdk2_python
 RUN pip3 install -e ./unitree_sdk2_python/
+
+COPY isem_go2_interface ./isem_go2_interface/
+RUN pip3 install -e ./isem_go2_interface/
 
 # install unitree_mujoco for a simulation environment
 #RUN pip3 install mujoco pygame

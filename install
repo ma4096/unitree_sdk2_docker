@@ -2,6 +2,9 @@ echo "Building the SDK..."
 if [ ! -d "./unitree_sdk2_python" ]; then
   git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
 fi
+if [ ! -d "./isem_go2_interface" ]; then
+  git clone https://github.com/ma4096/isem_go2_interface.git
+fi
 chmod +x start_docker
 docker compose build provider
 
@@ -12,9 +15,10 @@ fi
 chmod +x start_mujoco
 docker compose build mujoco
 
-echo "Building the RL MJLab container..."
-if [ ! -d "./unitree_rl_mjlab" ]; then
-  git clone https://github.com/unitreerobotics/unitree_rl_mjlab.git
-fi
-chmod +x start_mjlab
-docker compose build mjlab
+
+#echo "Building the RL MJLab container..."
+#if [ ! -d "./unitree_rl_mjlab" ]; then
+#  git clone https://github.com/unitreerobotics/unitree_rl_mjlab.git
+#fi
+#chmod +x start_mjlab
+#docker compose build mjlab

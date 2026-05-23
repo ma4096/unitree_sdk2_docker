@@ -11,6 +11,9 @@ services:
 
     volumes:
       - ./:/app/
+      - /tmp/.X11-unix/:/tmp/.X11-unix # needed to open windows on the screen
+    environment:
+      - "DISPLAY=${DISPLAY}"
     command:
       - "/bin/bash"
 
@@ -27,7 +30,7 @@ services:
     volumes:
       - /tmp/.X11-unix/:/tmp/.X11-unix # needed to open windows on the screen
       - ./unitree_mujoco/:/app/unitree_mujoco
-      - ./MuJoCo-LiDAR:/app/MuJoCo-LiDAR
+      #- ./MuJoCo-LiDAR:/app/MuJoCo-LiDAR
       - ./unitree_mujoco_old/:/app/unitree_mujoco_old
     environment:
       - "DISPLAY=${DISPLAY}"
@@ -38,7 +41,9 @@ services:
     #command: [ "python3", "unitree_mujoco.py" ]
     command: [ "/bin/bash" ]
 
-  mjlab:
+  mjlab: # this is currently not available
+    profiles:
+      - donotstart
     build:
       context: .
       dockerfile: dockerfiles/rl_mjlab.dockerfile

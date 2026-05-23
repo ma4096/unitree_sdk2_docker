@@ -11,7 +11,9 @@ RUN pip3 install mujoco pygame uv
 # mujoco_lidar is the cpu build, see https://github.com/discoverse-dev/MuJoCo-LiDAR/blob/main/docs/en/INSTALLATION.md for GPU acceleration
 WORKDIR /app
 COPY unitree_mujoco/ ./unitree_mujoco
-COPY MuJoCo-LiDAR/ ./MuJoCo-LiDAR
+
+RUN git clone https://github.com/discoverse-dev/MuJoCo-LiDAR.git
+#COPY MuJoCo-LiDAR/ ./MuJoCo-LiDAR
 
 WORKDIR /app/MuJoCo-LiDAR
 RUN pip install -e .
