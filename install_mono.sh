@@ -1,6 +1,13 @@
 # This installation script does not build the docker containers but rather installs all the software (unitree_sdk2_python, isem_go2_interface, unitree_mujoco) locally.
 # This is sometimes useful when you are working in a VM anyway.
 
+# check if pip is installed
+if command -v pip3 >/dev/null 2>&1 || command -v pip >/dev/null 2>&1; then
+  echo "pip is already installed."
+else
+  sudo apt install python3-pip
+fi
+
 echo "Installing unitree_sdk2_python..."
 if [ ! -d "./unitree_sdk2_python" ]; then
   git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
@@ -9,7 +16,7 @@ if [ ! -d "./isem_go2_interface" ]; then
   git clone https://github.com/ma4096/isem_go2_interface.git
 fi
 
-mkdir -p install && cd install
+mkdir -p installation && cd installation
 
 sudo apt-get update && apt-get install ffmpeg libsm6 libxext6 -y
 sudo apt-get install -y git cmake python3.11 python3-pip iproute2
@@ -36,7 +43,7 @@ if [ ! -d "./unitree_mujoco" ]; then
 fi
 
 pip install mujoco pygame
-cd install
+cd installation
 git clone https://github.com/discoverse-dev/MuJoCo-LiDAR.git
 pip install -e ./MuJoCo-LiDAR
 

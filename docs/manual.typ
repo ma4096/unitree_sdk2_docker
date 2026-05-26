@@ -30,7 +30,7 @@ This document is to introduce you into the technical details of the project task
   ```
   cd unitree_sdk2_docker
   chmod +x ./install_mono
-  ./install_mono
+  sudo ./install_mono
   ```
 
 - *If you are on Linux natively*, follow the steps outlined in the README.md of the `unitree_sdk2_docker` repo (short installation). Usage is a bit different, but you can use `./start_[docker, mujoco]` to launch the SDK or MuJoCo containers respectively.
