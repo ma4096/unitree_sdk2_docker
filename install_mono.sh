@@ -27,16 +27,16 @@ sudo apt-get install -y git cmake python3.11 python3-pip iproute2
 
 git clone --branch 0.10.2 https://github.com/eclipse-cyclonedds/cyclonedds.git \
 	&& cd cyclonedds \
-	&& mkdir build && cd build \
+	&& mkdir -p build && cd build \
 	&& cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
 	&& make -j$(nproc) \
-	&& make install
+	&& sudo make install
 
 CMAKE_PREFIX_PATH=/usr/local
 
 pip install --upgrade pip
 pip install numpy opencv-python uv onnxruntime
-cd ../..
+cd ../../..
 pip install -e ./unitree_sdk2_python
 pip install -e ./isem_go2_interface
 

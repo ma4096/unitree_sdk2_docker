@@ -12,11 +12,12 @@ This document is to introduce you into the technical details of the project task
 == Installation
 *If you are on Windows or MacOs, follow these steps.* 
 + Install a virtual machine (VM) of Ubuntu 22.04 LTS (https://releases.ubuntu.com/jammy/)
-  - If you are on Windows, try to use Hyper-V Manager. See #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/Install-Hyper-V?tabs=powershell&pivots=windows-server")[here] for installing Hyper-V Manager and #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/create-a-virtual-machine-in-hyper-v?tabs=hyper-v-manager") for installing a VM.
+  - If you are on Windows, try to use Hyper-V Manager. See #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/Install-Hyper-V?tabs=powershell&pivots=windows-server")[here] for installing Hyper-V Manager and #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/create-a-virtual-machine-in-hyper-v?tabs=hyper-v-manager")[here] for installing a VM.
     - Disable Secure Boot in the virtual machine's settings if it does not boot
   - If this is not possible, install Oracle VirtualBox (https://www.virtualbox.org/). This has a more complex setup process. An exemplary guide is https://itslinuxfoss.com/install-ubuntu-22-04-virtualbox/, with many more on the internet.
 + Start the virtual machine and create an arbitrary user
   - User name is not relevant for us, please remember the password!
+  - When installing, select the "Minimal Install" as you will not need all the optional software :)
 
 #colorbox(
   title: [#emoji.warning Important Settings],
@@ -26,13 +27,18 @@ This document is to introduce you into the technical details of the project task
 )[
   There currently are some pitfalls working with the VirtualBox virtual machine. These can lead to you not being able to open a terminal or start MuJoCo.
   - When creating the virtual machine, uncheck "Unattended Installation", as this creates an unprivileged user.
-  - If you are on Windows 11, make sure Hyper-V is disabled. 
+  - If you are on Windows 11, make sure Hyper-V is disabled.
+  Sometimes, certain features of your hardware do not get passed into the virtual machine. Check that the AVX instruction set is available by executing 
+  ```bash
+  grep avx /proc/cpuinfo
+  ```
+  If nothing is shown, that means AVX is not available. This is needed by MuJoCo and is oftentimes caused by Hyper-V running somewhere in the background still. Otherwise, if there is any output, you should be fine.
   If problems persist, please come into the tutorial session.
 ]
 
 *Inside the VM*: 
 + Open a terminal
-+ Install git and VSCodium#footnote[VSCodium is a "version" (fork) of Virtual Studio Code without any Microsoft associations. Both are open-source software. For the most part they are interchangable, but Codium is easier to install.]: `sudo apt install git codium`
++ Install git: `sudo apt install git`
   - Whenever you enter `sudo`, you are doing a privileged (admin) action. You will be prompted to enter the password of the account inside the VM. Typically, you can't see the characters you are entering, but they exist :)
 + Download our software package: 
   ```
@@ -65,7 +71,9 @@ unitree_sdk2_docker/
 │   │   ├── config.py
 │   │   └── unitree_mujoco.py
 │   ├── unitree_robots/
-│   │   ├── scene.xml
+│   │   ├── go2/
+│   │   │   ├── scene.xml
+│   │   │   └── ...
 │   │   └── ...
 │   └── ...
 ├── isem_go2_interface/
@@ -92,6 +100,11 @@ source venv/bin/activate
 ```
 from the `unitree_sdk2_docker` directory. This must be done in every terminal you intend to use in this project.
 ]
+
+=== Development usage
+A normal usage in the scope of this project would be to have a code editor like VSCode open with the `unitree_sdk2_docker` folder and editing code inside the `code` directory or the `unitree_mujoco/unitree_robots/go2/` simulation scene.
+
+In two terminals, you can run the simulation and your code simultaneously (see the next chapters).
 
 
 #pagebreak()
