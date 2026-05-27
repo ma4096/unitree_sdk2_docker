@@ -8,6 +8,10 @@ else
   sudo apt install python3-pip
 fi
 
+sudo apt install python3-venv
+python3 -m venv venv
+source venv/bin/activate
+
 echo "Installing unitree_sdk2_python..."
 if [ ! -d "./unitree_sdk2_python" ]; then
   git clone https://github.com/unitreerobotics/unitree_sdk2_python.git

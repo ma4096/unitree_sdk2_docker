@@ -10,15 +10,28 @@ This document is to introduce you into the technical details of the project task
 + You have access to a Windows/Mac/Linux computer, optimally with 16 GB+ memory (RAM)
 
 == Installation
-- *If you are on Windows or MacOs, follow these steps.* 
+*If you are on Windows or MacOs, follow these steps.* 
 + Install a virtual machine (VM) of Ubuntu 22.04 LTS (https://releases.ubuntu.com/jammy/)
-  - If you do not have a virtual machine manager software installed, install Oracle VirtualBox (https://www.virtualbox.org/)
-  - An exemplary guide is https://itslinuxfoss.com/install-ubuntu-22-04-virtualbox/, with many more on the internet
-  - As the robot will be simulated inside of this VM, it needs some compute power: Around 8 GB of RAM and 30 GB of storage should work  
+  - If you are on Windows, try to use Hyper-V Manager. See #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/Install-Hyper-V?tabs=powershell&pivots=windows-server")[here] for installing Hyper-V Manager and #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/create-a-virtual-machine-in-hyper-v?tabs=hyper-v-manager") for installing a VM.
+    - Disable Secure Boot in the virtual machine's settings if it does not boot
+  - If this is not possible, install Oracle VirtualBox (https://www.virtualbox.org/). This has a more complex setup process. An exemplary guide is https://itslinuxfoss.com/install-ubuntu-22-04-virtualbox/, with many more on the internet.
 + Start the virtual machine and create an arbitrary user
   - User name is not relevant for us, please remember the password!
 
-+ *Inside the VM*: Open a terminal
+#colorbox(
+  title: [#emoji.warning Important Settings],
+  color: "blue",
+  radius: 2pt,
+  width: auto,
+)[
+  There currently are some pitfalls working with the VirtualBox virtual machine. These can lead to you not being able to open a terminal or start MuJoCo.
+  - When creating the virtual machine, uncheck "Unattended Installation", as this creates an unprivileged user.
+  - If you are on Windows 11, make sure Hyper-V is disabled. 
+  If problems persist, please come into the tutorial session.
+]
+
+*Inside the VM*: 
++ Open a terminal
 + Install git and VSCodium#footnote[VSCodium is a "version" (fork) of Virtual Studio Code without any Microsoft associations. Both are open-source software. For the most part they are interchangable, but Codium is easier to install.]: `sudo apt install git codium`
   - Whenever you enter `sudo`, you are doing a privileged (admin) action. You will be prompted to enter the password of the account inside the VM. Typically, you can't see the characters you are entering, but they exist :)
 + Download our software package: 
@@ -30,10 +43,10 @@ This document is to introduce you into the technical details of the project task
   ```
   cd unitree_sdk2_docker
   chmod +x ./install_mono
-  sudo ./install_mono
+  source ./install_mono
   ```
 
-- *If you are on Linux natively*, follow the steps outlined in the README.md of the `unitree_sdk2_docker` repo (short installation). Usage is a bit different, but you can use `./start_[docker, mujoco]` to launch the SDK or MuJoCo containers respectively.
+*If you are on Linux natively*, follow the steps outlined in the README.md of the `unitree_sdk2_docker` repo (short installation). Usage is a bit different, but you can use `./start_[docker, mujoco]` to launch the SDK or MuJoCo containers respectively.
   - Using `./install_mono` works too, but can make changes to your local system. If you want to use it anyway, consider sourcing a Python virtual environment before running the installation.
 
 #pagebreak()
@@ -62,8 +75,23 @@ unitree_sdk2_docker/
 │   │       ├── OnnxController.py
 │   │       └── ...
 │   └── ...
+├── venv/
+│   └── bin/
+│       └── activate
 └── (other folders not directly relevant to you)
 ```
+
+#colorbox(
+  title: [#emoji.lightbulb Activating a virtual environment],
+  color: "blue",
+  radius: 2pt,
+  width: auto,
+)[The Python packages get installed into a virtual environment. This isolates your system environment from your development activities. To activate ("source") the environment, execute
+```bash
+source venv/bin/activate
+```
+from the `unitree_sdk2_docker` directory. This must be done in every terminal you intend to use in this project.
+]
 
 
 #pagebreak()
