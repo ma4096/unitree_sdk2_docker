@@ -55,4 +55,7 @@ pip install -e ./MuJoCo-LiDAR
 
 cd ..
 
+# remove unused files for this type of installation
+rm start_docker start_mjlab start_mujoco start_webrtc install compose.yaml
+
 echo "Installed unitree_sdk2_python, isem_go2_interface, cyclonedds, unitree_mujoco :)"
