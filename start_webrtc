@@ -1,0 +1,2 @@
+xhost +local:root
+docker compose run --rm webrtc_connect

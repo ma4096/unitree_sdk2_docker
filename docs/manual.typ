@@ -1,4 +1,7 @@
 #import "@preview/colorful-boxes:1.4.3": *
+#let bg = rgb("#e6e4e4")
+#show raw: box.with(fill: bg, stroke: stroke(paint: bg, thickness: 1mm), radius: 1mm)
+
 
 #align(center, [
   = SMS Project
@@ -10,17 +13,20 @@ This document is to introduce you into the technical details of the project task
 + You have access to a Windows/Mac/Linux computer, optimally with 16 GB+ memory (RAM)
 
 == Installation
-*If you are on Windows or MacOs, follow these steps.* 
-+ Install a virtual machine (VM) of Ubuntu 22.04 LTS (https://releases.ubuntu.com/jammy/)
-  - If you are on Windows, try to use Hyper-V Manager. See #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/Install-Hyper-V?tabs=powershell&pivots=windows-server")[here] for installing Hyper-V Manager and #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/create-a-virtual-machine-in-hyper-v?tabs=hyper-v-manager")[here] for installing a VM.
+In all cases, you will be prompted to select the memory, storage and CPU cores to make available to the virtual machine. We have had good results with 8192MB, 30GB, and >4 cores respectively. If your computer can't provide these resources, you can experiment with less memory and CPU cores, which is untested but should work (slower).
+
+*Windows:*
++ Select the appropriate virtualization software:
+  - If you are on Windows 10/11 Pro, try to use Hyper-V Manager. See #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/Install-Hyper-V?tabs=powershell&pivots=windows-server")[here] for installing Hyper-V Manager and #link("https://learn.microsoft.com/de-de/windows-server/virtualization/hyper-v/get-started/create-a-virtual-machine-in-hyper-v?tabs=hyper-v-manager")[here] for installing a VM.
     - Disable Secure Boot in the virtual machine's settings if it does not boot
-  - If this is not possible, install Oracle VirtualBox (https://www.virtualbox.org/). This has a more complex setup process. An exemplary guide is https://itslinuxfoss.com/install-ubuntu-22-04-virtualbox/, with many more on the internet.
+  - If this is not possible (because you are on a "Home" version of Windows), install Oracle VirtualBox (https://www.virtualbox.org/). This has a more complex setup process. An exemplary guide is https://itslinuxfoss.com/install-ubuntu-22-04-virtualbox/, with many more on the internet.
++ Install a virtual machine (VM) of Ubuntu 22.04 LTS (https://releases.ubuntu.com/jammy/)
 + Start the virtual machine and create an arbitrary user
   - User name is not relevant for us, please remember the password!
   - When installing, select the "Minimal Install" as you will not need all the optional software :)
 
 #colorbox(
-  title: [#emoji.warning Important Settings],
+  title: [#emoji.warning Important Settings in VirtualBox],
   color: "blue",
   radius: 2pt,
   width: auto,
@@ -29,12 +35,15 @@ This document is to introduce you into the technical details of the project task
   - When creating the virtual machine, uncheck "Unattended Installation", as this creates an unprivileged user.
   - If you are on Windows 11, make sure Hyper-V is disabled.
   Sometimes, certain features of your hardware do not get passed into the virtual machine. Check that the AVX instruction set is available by executing 
-  ```bash
-  grep avx /proc/cpuinfo
-  ```
+  `grep avx /proc/cpuinfo`
   If nothing is shown, that means AVX is not available. This is needed by MuJoCo and is oftentimes caused by Hyper-V running somewhere in the background still. Otherwise, if there is any output, you should be fine.
   If problems persist, please come into the tutorial session.
 ]
+
+*MacOS* (tested on Apple Silicon):
+- Use the UTM virtualization software
+- You can't directly install Ubuntu Desktop but need to install the full Desktop from the Server edition. This is detailed in this guide: https://www.youtube.com/watch?v=1PL-0-5BNXs
+  - Instead of running `sudo apt install ubuntu-desktop`, you can try `sudo apt install --no-install-recommends ubuntu-desktop` for a less bloated version of Ubuntu (without, e.g., the full LibreOffice suite)
 
 *Inside the VM*: 
 + Open a terminal
@@ -48,8 +57,8 @@ This document is to introduce you into the technical details of the project task
 + Install the software (execute line by line):
   ```
   cd unitree_sdk2_docker
-  chmod +x ./install_mono
-  source ./install_mono
+  chmod +x ./install_mono.sh
+  source ./install_mono.sh
   ```
 
 *If you are on Linux natively*, follow the steps outlined in the README.md of the `unitree_sdk2_docker` repo (short installation). Usage is a bit different, but you can use `./start_[docker, mujoco]` to launch the SDK or MuJoCo containers respectively.
@@ -109,7 +118,7 @@ In two terminals, you can run the simulation and your code simultaneously (see t
 
 #pagebreak()
 == Building the simulation
-We use a modified simulation environment based on Unitree's official MuJoCo version (https://github.com/unitreerobotics/unitree_mujoco) which integrates more sensors.
+We use a modified simulation environment based on Unitree's official MuJoCo version (https://github.com/unitreerobotics/unitree_mujoco) which integrates more sensors and support for low performance hardware.
 
 #colorbox(
   title: [#emoji.lightbulb What is MuJoCo?],
@@ -120,11 +129,15 @@ We use a modified simulation environment based on Unitree's official MuJoCo vers
   MuJoCo (Multi-Joint dynamics with Contact) is a simulation package for rigid robotics originally developed by Google. Like all robotic simulation tools, it is takes inputs (like torque applied to a joint), simulates the physical reaction of the system, and returns some defined sensor readings. For us, it is also important that the system can be visually observed.
 ]
 
+//For our usecase, the simulation configuration lives in `unitree_sdk2_docker/unitree_mujoco/unitree_robots/go2/`, where `scene.xml` defines the simulated environment and `config.py` sets some meta configuration options. If you have installed this software using `install_mono.sh`, please change 
+The actual python scripts for the simulation are placed inside the `unitree_sdk2_docker/unitree_mujoco/simulate_python` folder.
+- `config.py` sets some options. If you have installed this software using `install_mono.sh`, make sure to change the `INTERFACE` to `lo` (line 4).
+- `unitree_mujoco.py` runs the simulation.
+
 To start the simulation, run 
 ```
 python unitree_mujoco.py
 ``` 
-inside the `unitree_sdk2_docker/unitree_mujoco/simulate_python` folder.
 An empty world with only the robot and some boxes will show up. Look, zoom, and move around using the mouse and explore the settings to make yourself familiar with the interface.
 
 This scene is defined in `unitree_sdk2_docker/unitree_mujoco/unitree_robots/go2/scene.xml`. Edit the boxes that are in the scene by changing some of their properties inside the `<worldbody>` tag. After saving the file and restarting the simulator, you can observe the changes.
@@ -144,7 +157,8 @@ from unitree_sdk2py.core.channel import ChannelFactoryInitialize
 from time import sleep
 
 # Setup the communication with the robot
-# This is the only thing that would need to be changed to switch between simulation and the real robot
+# This is the only thing that would need to be changed to switch between simulation and the real robot#
+# If installed using the `install_mono.sh` script, please use "lo" insted of "eth0"
 ChannelFactoryInitialize(0, "eth0")
 
 go2 = Go2()

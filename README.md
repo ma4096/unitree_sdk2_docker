@@ -1,3 +1,5 @@
+This README file is for installation and usage on Ubuntu. For other usages (SMS course), see https://github.com/ma4096/unitree_sdk2_docker/blob/main/docs/manual.pdf.
+
 Provide a docker for the unitree sdk2 python package to directly communicate with a unitree robot. Also (optionally) provides a docker service for unitree's MuJoCo stuff.
 
 All of this is tested on Ubuntu 22.04 LTS and should work on any other reasonable linux distro. Docker Desktop on Windows has not yet been successfully tested, as the network driver causes issues.

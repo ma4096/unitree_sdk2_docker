@@ -22,3 +22,10 @@ docker compose build mujoco
 #fi
 #chmod +x start_mjlab
 #docker compose build mjlab
+
+echo "Building the WebRTC Connect container..."
+if [ ! -d "./unitree_webrtc_connect" ]; then
+  git clone https://github.com/legion1581/unitree_webrtc_connect.git
+fi
+chmod +x start_webrtc
+docker compose build webrtc_connect

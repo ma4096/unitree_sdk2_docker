@@ -27,12 +27,14 @@ sudo apt-get install -y git cmake python3.11 python3-pip iproute2
 
 git clone --branch 0.10.2 https://github.com/eclipse-cyclonedds/cyclonedds.git \
 	&& cd cyclonedds \
-	&& mkdir -p build && cd build \
-	&& cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
-	&& make -j$(nproc) \
-	&& sudo make install
+	&& mkdir -p build install && cd build \
+	&& cmake .. -DCMAKE_INSTALL_PREFIX=../install \
+  && cmake --build . --target install
+	#&& make -j$(nproc) \
+	#&& sudo make install
 
-CMAKE_PREFIX_PATH=/usr/local
+export CYCLONEDDS_HOME=$PWD/../install
+#export CMAKE_PREFIX_PATH=/usr/local
 
 pip install --upgrade pip
 pip install numpy opencv-python uv onnxruntime

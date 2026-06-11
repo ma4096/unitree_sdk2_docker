@@ -4,8 +4,8 @@ services:
       context: .
       dockerfile: dockerfiles/sdk2_python.dockerfile
     networks:
-    #  network:
-    #    ipv4_address: 192.168.123.51
+      #network:
+      #  ipv4_address: 192.168.123.51
       internal:
         ipv4_address: 192.168.244.3
 
@@ -76,18 +76,36 @@ services:
     post_start:
       - command: ["ollama", "run", "deepseek-ocr"]
 
+  webrtc_connect:
+    build:
+      context: .
+      dockerfile: dockerfiles/webrtc_connect.dockerfile
+    network_mode: "host"
+
+    volumes:
+      - /tmp/.X11-unix/:/tmp/.X11-unix
+      - ./unitree_webrtc_connect:/app/unitree_webrtc_connect
+
+    container_name: webrtc_connect
+    image: laika/webrtc_connect:latest
+
+    environment:
+      - "DISPLAY=${DISPLAY}"
+      - "UNITREE_ROBOT_IP=192.168.12.1"
+      
+
 networks:
   network:
     driver: ipvlan
     driver_opts:
-      parent: enx9c69d36bd568 # "Mathis" LAN adapter
+      parent: eth0 #enx9c69d36bd568 # "Mathis" LAN adapter
       ipvlan-mode: l2
     ipam:
       driver: default
       config:
         - subnet: 192.168.123.0/24
           gateway: 192.168.123.1
-          ip_range: 192.168.123.0/24
+          ip_range: 192.168.123.0/24  
 
   internal:
     driver: bridge
